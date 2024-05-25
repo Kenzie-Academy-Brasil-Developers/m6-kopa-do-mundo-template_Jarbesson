@@ -10,7 +10,7 @@ class TeamView(APIView):
         try:
             team_data = data_processing(request.data)
         except (NegativeTitlesError, InvalidYearCupError, ImpossibleTitlesError) as err:
-            return Response({"Error": str(err)}, status.HTTP_400_BAD_REQUEST) 
+            return Response({"error": str(err)}, status.HTTP_400_BAD_REQUEST) 
         
         team = Team.objects.create(**team_data)
         team_dict = model_to_dict(team)
@@ -24,7 +24,7 @@ class TeamView(APIView):
             team_dict = model_to_dict(team)
             team_list.append(team_dict)
 
-            return Response(team_list, status.HTTP_200_OK)    
+            return Response(team_list, status.HTTP_200_OK)
         
 
 class TeamDetailView(APIView):
@@ -33,7 +33,7 @@ class TeamDetailView(APIView):
             team = Team.objects.get(id=team_id)
         except Team.DoesNotExist:
             return Response(
-                {"error": "Team not found"},
+                {"message": "Team not found"},
                 status.HTTP_404_NOT_FOUND,
             )
         converted_team = model_to_dict(team)
@@ -44,7 +44,7 @@ class TeamDetailView(APIView):
             found_team = Team.objects.get(id=team_id)
         except Team.DoesNotExist:
             return Response(
-                {"error": "Team not found"},
+                {"message": "Team not found"},
                 status.HTTP_404_NOT_FOUND,
             )
 
@@ -60,7 +60,7 @@ class TeamDetailView(APIView):
             found_team = Team.objects.get(id=team_id)
         except Team.DoesNotExist:
             return Response(
-                {"error": "Team not found"},
+                {"message": "Team not found"},
                 status.HTTP_404_NOT_FOUND,
             )
         found_team.delete()
